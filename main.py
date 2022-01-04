@@ -30,19 +30,27 @@ except:
     """)
 
 def main():
-    get_chart_data()
-    for i in range(2):
-        try:
-            playaudio(audio_file_path)
-        except KeyboardInterrupt:
+    while value_gotten_from_data == False:
+        value_gotten_from_data = get_chart_data()
+        if value_gotten_from_data == True:
+            for i in range(2):
+                try:
+                    playaudio(audio_file_path)
+                except KeyboardInterrupt:
+                    pass
+                print(f"played {i}")
             pass
-        print(f"played {i}")
-    pass
 
 def get_chart_data():
     tv = tvDatafeed.TvDatafeed(username, password)
     data_interval = tv.get_hist('XAUUSD', interval = tvDatafeed.Interval.in_15_minute)
     print(data_interval)
+    '''
+    if (condition):
+        return True
+    else:
+        return False
+    '''
     pass
 
 def playaudio(file_path):
@@ -51,6 +59,7 @@ def playaudio(file_path):
     playsound.playsound(file_path)
 
 if __name__ == '__main__':
+    value_gotten_from_data = False
     audio_file_path = r"C:\Users\user\Documents\Codes\self_projects\python\market_notification_bot\mixkit-classic-alarm-notify.wav"
     #audio_file_path = r"C:\Users\user\Music\Other\I_miss_you(256k).mp3"
     main()
