@@ -1,0 +1,6 @@
+tvdatafeed
+pandas
+selenium
+playsound
+pydub
+websocket-client
