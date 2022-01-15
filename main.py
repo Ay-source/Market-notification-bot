@@ -5,7 +5,7 @@ This program plays an mp3 file when an engulfing candle or pin bar is printed on
 Requirements:
 
 
-This program was started by Oke Ayomide on the 11th of December, 2021.
+This program was created by Oke Ayomide on the 11th of December, 2021.
 Social media:
 twitter:
 Whatsapp: +2349061145027
@@ -29,7 +29,7 @@ except:
              You can fix this by running the command 'python -m pip install -r requirements.txt'
     """)
 
-def main():
+def main(value_gotten_from_data):
     while value_gotten_from_data == False:
         value_gotten_from_data = get_chart_data()
         if value_gotten_from_data == True:
@@ -39,7 +39,6 @@ def main():
                 except KeyboardInterrupt:
                     pass
                 print(f"played {i}")
-            pass
 
 def get_chart_data():
     tv = tvDatafeed.TvDatafeed(username, password)
@@ -51,7 +50,7 @@ def get_chart_data():
     else:
         return False
     '''
-    pass
+    return True
 
 def playaudio(file_path):
     #song = pydub.AudioSegment(file_path)
@@ -62,4 +61,4 @@ if __name__ == '__main__':
     value_gotten_from_data = False
     audio_file_path = r"C:\Users\user\Documents\Codes\self_projects\python\market_notification_bot\mixkit-classic-alarm-notify.wav"
     #audio_file_path = r"C:\Users\user\Music\Other\I_miss_you(256k).mp3"
-    main()
+    main(value_gotten_from_data)
