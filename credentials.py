@@ -1,3 +1,2 @@
-username = 'Reactant1'
-password = 'Reactant1?'
-geckodriver = None
+username = Reactant
+password = Reactant1?
