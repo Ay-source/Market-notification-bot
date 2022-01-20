@@ -22,8 +22,8 @@ try:
         username = input("Please input your tradingview username: ")
         password = input("Please input your tradingview password: ")
         with open('credentials.py', 'w+') as f:
-            f.write('username = ' + username + '\n')
-            f.write('password = ' + password + '\n')
+            f.write('username = "' + username + '"\n')
+            f.write('password = "' + password + '"\n')
 except:
     raise ImportError("""You haven't imported the required modules from requirements.txt
              You can fix this by running the command 'python -m pip install -r requirements.txt'
