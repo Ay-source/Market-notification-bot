@@ -1,0 +1,3 @@
+Get data from tvdatafeed
+Check if the current candlestick is a pinbar or engulfing
+play alarm if the second statement is true

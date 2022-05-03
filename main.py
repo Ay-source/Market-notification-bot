@@ -16,6 +16,8 @@ try:
     import tvDatafeed
     #import pydub
     import playsound
+    #import credentials
+    import csv
     try:
         from credentials import username, password
     except:
@@ -41,8 +43,8 @@ def main(value_gotten_from_data):
                 print(f"played {i}")
 
 def get_chart_data():
-    tv = tvDatafeed.TvDatafeed(username, password)
-    data_interval = tv.get_hist('XAUUSD', interval = tvDatafeed.Interval.in_15_minute)
+    tv = tvDatafeed.TvDatafeed(username, password, chromedriver_path=r"C:\Users\user\Downloads\installation_files\chromedriver_win32/chromedriver.exe")
+    data_interval = tv.get_hist('XAUUSD', 'GLOBALPRIME', interval = tvDatafeed.Interval.in_15_minute, n_bars = 5)
     print(data_interval)
     '''
     if (condition):
@@ -59,6 +61,6 @@ def playaudio(file_path):
 
 if __name__ == '__main__':
     value_gotten_from_data = False
-    audio_file_path = r"C:\Users\user\Documents\Codes\self_projects\python\market_notification_bot\mixkit-classic-alarm-notify.wav"
+    audio_file_path = r"C:\Users\user\Documents\IT\dev\Codes\self_projects\python\market_notification_bot\mixkit-city-alert-siren-alert.wav"
     #audio_file_path = r"C:\Users\user\Music\Other\I_miss_you(256k).mp3"
     main(value_gotten_from_data)
