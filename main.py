@@ -34,6 +34,7 @@ except:
 
 def main(value_gotten_from_data):
     while True:
+        print("Data verification in process...")
         value_gotten_from_data, _type = get_chart_data()
         if value_gotten_from_data == True:
             for i in range(2):
