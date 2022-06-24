@@ -15,10 +15,10 @@ Instagram
 try:
     import time
     import tvDatafeed
-    #import pydub
     import playsound
-    import csv
     import pandas as pd
+    from datetime import datetime
+    from datetime import timedelta
     try:
         from credentials import username, password
     except:
@@ -33,41 +33,50 @@ except:
     """)
 
 def main(value_gotten_from_data):
-    while value_gotten_from_data == False:
-        value_gotten_from_data = get_chart_data()
+    while True:
+        value_gotten_from_data, _type = get_chart_data()
         if value_gotten_from_data == True:
             for i in range(2):
                 try:
                     playaudio(audio_file_path)
                 except KeyboardInterrupt:
                     pass
-                print(f"played {i}")
+            print(f"You should {_type}")
+        time.sleep(20)
 
 def get_chart_data():
-    tv = tvDatafeed.TvDatafeed(username, password, chromedriver_path=r"C:\Users\aolam\Downloads\installation_files\chromedriver_win32")
+    tv = tvDatafeed.TvDatafeed(chromedriver_path=None)#chromedriver_path=r"C:\Users\aolam\Downloads\installation_files\chromedriver_win32")
     data_interval = tv.get_hist('XAUUSD', 'GLOBALPRIME', interval = tvDatafeed.Interval.in_15_minute, n_bars = 5)
     open = list(data_interval['open'])
+    open.reverse()
     close = list(data_interval['close'])
+    close.reverse()
     high = list(data_interval['high'])
+    high.reverse()
     low = list(data_interval['low'])
-    '''
-    if (condition):
-        return True
+    low.reverse()
+    datet = list(data_interval.index)
+    datet.reverse()
+    if ((datetime.now() - datet[0]) <= timedelta(minutes = 15)):
+        for i in [open, close, high, low]:
+            print(f"before {i[0]}")
+            del(i[0])
+            print(f"after {i[0]}")
+    _type = pinbar(open[0], high[0], low[0], close[0])
+    if _type:
+        return True, _type
     else:
-        return False
-    '''
-    return True
+        return False, False
 
 def pinbar(o, h, l, c):
+    """Checks if the market printed a pinbar formation."""
     bearish = False
     if o > c:
         bearish = True
-
-    print(bearish)
     if (((h - o) >= abs(o - c)) or (((h - c) >= abs(o - c)) and not bearish)):
-        return True, 'sell'
-    elif ((((o - l) >= abs(o - c)) and bearish) or ((c -l) >= abs(o - c))):
-        return True, 'buy'
+        return 'sell'
+    elif ((((o - l) >= abs(o - c)) and not bearish) or ((c -l) >= abs(o - c))):
+        return 'buy'
 
 def playaudio(file_path):
     #song = pydub.AudioSegment(file_path)
@@ -77,9 +86,8 @@ def playaudio(file_path):
 if __name__ == '__main__':
     while True:
         value_gotten_from_data = False
-        audio_file_path = r"C:\Users\user\Documents\IT\dev\Codes\self_projects\python\market_notification_bot\mixkit-city-alert-siren-alert.wav"
-        #audio_file_path = r"C:\Users\user\Documents\IT\dev\Codes\self_projects\python\market_notification_bot\mixkit-classic-alarm-notify.wav"
+        audio_file_path = r"C:\Users\aolam\Documents\IT\dev\Codes\self_projects\python\market_notification_bot\mixkit-city-alert-siren-alert.wav"
+        #audio_file_path = r"C:\Users\aolam\Documents\IT\dev\Codes\self_projects\python\market_notification_bot\mixkit-classic-alarm-notify.wav"
         #audio_file_path = r"C:\Users\user\Music\Other\I_miss_you(256k).mp3"
-        if main(value_gotten_from_data) is True:
-            playsound(audio_file_path)
+        main(value_gotten_from_data)
         time.sleep(60)
