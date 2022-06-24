@@ -16,7 +16,7 @@ try:
     import time
     import tvDatafeed
     import playsound
-    import pandas as pd
+    import subprocess
     from datetime import datetime
     from datetime import timedelta
     try:
@@ -33,17 +33,25 @@ except:
     """)
 
 def main(value_gotten_from_data):
+    global datastamp
+    datastamp = {'data': datetime(1929, 12, 1, 1, 1, 1, 1)}
     while True:
-        print("Data verification in process...")
-        value_gotten_from_data, _type = get_chart_data()
-        if value_gotten_from_data == True:
-            for i in range(2):
-                try:
-                    playaudio(audio_file_path)
-                except KeyboardInterrupt:
-                    pass
-            print(f"You should {_type}")
-        time.sleep(20)
+        try:
+            print("Data verification in process...")
+            value_gotten_from_data, _type = get_chart_data()
+            if value_gotten_from_data == True:
+                for i in range(2):
+                    try:
+                        playaudio(audio_file_path)
+                    except KeyboardInterrupt:
+                        pass
+                if _type == "doji":
+                    print(f"It is a {_type}")
+                else:
+                    print(f"You should {_type}")
+            time.sleep(60)
+        except:
+            pass
 
 def get_chart_data():
     tv = tvDatafeed.TvDatafeed(chromedriver_path=None)#chromedriver_path=r"C:\Users\aolam\Downloads\installation_files\chromedriver_win32")
@@ -59,9 +67,16 @@ def get_chart_data():
     datet = list(data_interval.index)
     datet.reverse()
     if ((datetime.now() - datet[0]) <= timedelta(minutes = 15)):
-        for i in [open, close, high, low]:
+        for i in [open, close, high, low, datet]:
             del(i[0])
+    if (datastamp['data'] == datet[0]):
+        print("Waiting for new candle stick formation")
+        return False, False
+    else:
+        datastamp['data'] = datet[0]
     _type = pinbar(open[0], high[0], low[0], close[0])
+    if _type == False:
+        bool_value, _type = engulfing(open, high, low, close)
     if _type:
         return True, _type
     else:
@@ -72,21 +87,47 @@ def pinbar(o, h, l, c):
     bearish = False
     if o > c:
         bearish = True
-    if (((h - o) >= abs(o - c)) or (((h - c) >= abs(o - c)) and not bearish)):
+    sell = ((((h - o) >= abs(o - c)) and bearish) or (((h - c) >= abs(o - c)) and not bearish))
+    buy = ((((o - l) >= abs(o - c)) and not bearish) or (((c - l) >= abs(o - c)) and bearish))
+    if sell and buy:
+        return 'doji'
+    elif sell:
         return 'sell'
-    elif ((((o - l) >= abs(o - c)) and not bearish) or ((c -l) >= abs(o - c))):
+    elif buy:
         return 'buy'
+    else:
+        return False
+
+def engulfing(o, h, l, c):
+    if (h[0] >= h[1] and l[0] <= l[1]):
+        if o[0] > c[0]:
+            return (True, 'sell')
+        else:
+            return (True, 'buy')
+    else:
+        return (False, None)
 
 def playaudio(file_path):
-    #song = pydub.AudioSegment(file_path)
-    #pydub.playback.play(song)
     playsound.playsound(file_path)
 
 if __name__ == '__main__':
+    print("BOT STARTED")
+    time.sleep(1)
+    for i in range(1, 4):
+        subprocess.call("cls", shell=True)
+        print("Please wait" + "." * i)
+        time.sleep(1)
+    print("\n\nIn progress...")
+    time.sleep(3)
+    subprocess.call("cls", shell=True)
+    print("""
+                            #####################################
+                            ####   MARKET NORIFICATION BOT   ####
+                            ######## CREATED BY: FORBY  #########
+                            #####################################
+                            Script link: https://github.com/Ay-source/Market-notification-bot
+    """)
     while True:
         value_gotten_from_data = False
         audio_file_path = r"C:\Users\aolam\Documents\IT\dev\Codes\self_projects\python\market_notification_bot\mixkit-city-alert-siren-alert.wav"
-        #audio_file_path = r"C:\Users\aolam\Documents\IT\dev\Codes\self_projects\python\market_notification_bot\mixkit-classic-alarm-notify.wav"
-        #audio_file_path = r"C:\Users\user\Music\Other\I_miss_you(256k).mp3"
         main(value_gotten_from_data)
-        time.sleep(60)
