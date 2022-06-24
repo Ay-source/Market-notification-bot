@@ -17,7 +17,6 @@ try:
     import tvDatafeed
     #import pydub
     import playsound
-    #import credentials
     import csv
     import pandas as pd
     try:
@@ -45,7 +44,7 @@ def main(value_gotten_from_data):
                 print(f"played {i}")
 
 def get_chart_data():
-    tv = tvDatafeed.TvDatafeed(username, password, chromedriver_path=r"C:\Users\user\Downloads\installation_files\chromedriver_win32/chromedriver.exe")
+    tv = tvDatafeed.TvDatafeed(username, password, chromedriver_path=r"C:\Users\aolam\Downloads\installation_files\chromedriver_win32")
     data_interval = tv.get_hist('XAUUSD', 'GLOBALPRIME', interval = tvDatafeed.Interval.in_15_minute, n_bars = 5)
     open = list(data_interval['open'])
     close = list(data_interval['close'])
