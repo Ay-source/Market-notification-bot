@@ -59,9 +59,7 @@ def get_chart_data():
     datet.reverse()
     if ((datetime.now() - datet[0]) <= timedelta(minutes = 15)):
         for i in [open, close, high, low]:
-            print(f"before {i[0]}")
             del(i[0])
-            print(f"after {i[0]}")
     _type = pinbar(open[0], high[0], low[0], close[0])
     if _type:
         return True, _type
